@@ -22,9 +22,22 @@ Welcome To Babble
   const url ='/babbles'
   const responseType ='json'
 
+function handleDidLike(tweet_id,currentCount){
+  console.log(currentCount)
+}
+
+function LikeBtn(tweet){
+  return "<button class='btn btn-primary' onclick=handleDidLike("+tweet.id + "," +tweet.likes+")>"+tweet.likes+" Like</button>"
+}
+
 function formatTweetElement(tweet){
 
-  var formattedTweet ='<div class = "mb-4 tweet" id="tweet-'+tweet.id+'"><h1>' + tweet.id +'</h1>' + '<p>' + tweet.content +'</p></div>'
+  var formattedTweet ='<div class = "mb-4 tweet" id="tweet-'+tweet.id+'">'+ 
+  '<p>' 
+  + tweet.content 
+  +'</p><div class="btn-group">'
+  + LikeBtn(tweet)
+  +'</div></div>'
   return formattedTweet
 }
   xhr.responseType = responseType

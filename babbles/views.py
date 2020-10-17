@@ -16,7 +16,7 @@ def tweet_list_view(request,*args,**kwargs):
         return JSon Data
     """
     qs = Tweet.objects.all() #model object grabs all the data
-    tweets_list = [{"id":x.id,"content":x.content} for x in qs]  #iterate on the database
+    tweets_list = [{"id":x.id,"content":x.content, "likes":12} for x in qs]  #iterate on the database
     data = {
         "isUser":False,
         "response": tweets_list}
