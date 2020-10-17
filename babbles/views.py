@@ -15,9 +15,11 @@ def tweet_list_view(request,*args,**kwargs):
         Consume by JS
         return JSon Data
     """
-    qs = Tweet.objects.all()
-    tweets_list = [{"id":x.id,"content":x.content} for x in qs]
-    data = {"response": tweets_list}
+    qs = Tweet.objects.all() #model object grabs all the data
+    tweets_list = [{"id":x.id,"content":x.content} for x in qs]  #iterate on the database
+    data = {
+        "isUser":False,
+        "response": tweets_list}
     return JsonResponse(data)
 
 def tweet_detail_view(request,tweet_id,*args,**kwargs):

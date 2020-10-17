@@ -6,4 +6,19 @@ Amazing
 
 {% block content %}
 Welcome To Babble
+<script>
+  const xhr = new XMLHttpRequest() //xhr = someClass()
+  const method ='GET'
+  const url ='/babbles'
+  const responseType ='json'
+
+  xhr.responseType = responseType
+  xhr.open(method,url)
+  xhr.onload = function(){
+    const serverResponse = xhr.response
+    var listedItems = serverResponse.response
+    console.log(xhr.response)
+  }
+  xhr.send()
+</script>
 {% endblock content %}
