@@ -8,12 +8,15 @@ from .forms import TweetForm
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
 def tweet_create_view(request,*args,**kwargs):
+    print("ajax",request.is_ajax())
     form = TweetForm(request.POST or None)
     next_url = request.POST.get("next") or None
     print('next_url',next_url)
     if form.is_valid():
         obj = form.save(commit=False)
         obj.save()
+        if request.is_ajax():
+            return JsonResponse(obj.serialize(),status=201)
         if next_url != None and is_safe_url(next_url,ALLOWED_HOSTS):
             return redirect(next_url)
         form = TweetForm()
@@ -31,7 +34,8 @@ def tweet_list_view(request,*args,**kwargs):
         return JSon Data
     """
     qs = Tweet.objects.all() #model object grabs all the data
-    tweets_list = [{"id":x.id,"content":x.content, "likes":12} for x in qs]  #iterate on the database
+    # tweets_list = [{"id":x.id,"content":x.content, "likes":12} for x in qs]  #iterate on the database
+    tweets_list = [x.serialize() for x in qs]
     data = {
         "isUser":False,
         "response": tweets_list}
