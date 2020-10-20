@@ -2,7 +2,8 @@ from django.http import HttpResponse,JsonResponse,Http404
 from django.shortcuts import render,redirect
 from django.utils.http import is_safe_url
 from django.conf import settings
-
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from .models import Tweet
 from .forms import TweetForm
 from .serializers import TweetSerializer
@@ -10,12 +11,30 @@ from .serializers import TweetSerializer
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
 
+@api_view(['POST'])
 def tweet_create_view(request,*args,**kwargs):
     serializer = TweetSerializer(data=request.POST or None)
-    if serializer.is_valid():
-       obj = serializer.save(user=request.user)
-       return JsonResponse(serializer.data,status=201)
-    return JsonResponse({},status=400)
+    if serializer.is_valid(raise_exception=True):
+       serializer.save(user=request.user)
+       return Response(serializer.data,status=201)
+    return Response({},status=400)
+
+@api_view(['GET'])
+def tweet_list_view(request,*args,**kwargs):
+    qs = Tweet.objects.all() #model object grabs all the data
+    # tweets_list = [{"id":x.id,"content":x.content, "likes":12} for x in qs]  #iterate on the database
+    serializer = TweetSerializer(qs, many=True)
+    return Response(serializer.data,status=200)
+
+@api_view(['GET'])
+def tweet_detail_view(request,tweet_id,*args,**kwargs):
+    qs = Tweet.objects.filter()
+    if not qs.exists():
+        return Response({},status=404)
+    obj = qs.first
+    serializer = TweetSerializer(obj)
+    return Response(serializer.data,status=200)    
+
 
 def tweet_create_view_pure_django(request,*args,**kwargs):
     user = request.user
@@ -44,7 +63,7 @@ def home_view(request,*args,**kwargs):
     # return HttpResponse("<h1>Hello World</h1>")
     return render(request,"pages/home.html",context={},status=200)
 
-def tweet_list_view(request,*args,**kwargs):
+def tweet_list_view_pure_django(request,*args,**kwargs):
     """
         REST API VIEW
         Consume by JS
@@ -58,7 +77,7 @@ def tweet_list_view(request,*args,**kwargs):
         "response": tweets_list}
     return JsonResponse(data)
 
-def tweet_detail_view(request,tweet_id,*args,**kwargs):
+def tweet_detail_view_pure_django(request,tweet_id,*args,**kwargs):
     # print(args,kwargs)
     """
         REST API VIEW
