@@ -85,6 +85,13 @@ Amazing
           }
           console.log(errorJson)
         }
+        else if(xhr.status === 500){
+          alert("Internal Server Error!")
+        }
+        else if(xhr.status === 401){
+          alert("Login Again!")
+          window.location.href = "/login"
+        }
 
     }
     xhr.onerror = function(){
