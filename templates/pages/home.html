@@ -14,8 +14,9 @@ Amazing
   <div class='col-md-4 mx-auto col-10'> 
     <form class='form' id="tweet-create-form" action="/create-tweet" method="post"> 
       {% csrf_token %}
+      <div class='d-none alert alert-danger'  id='tweet-create-form-error'></div>
       <input type="hidden" value="/" name="next" >
-      <textarea class="form-control" name="content" placeholder="Your Tweet" cols="40" rows="5"></textarea>
+      <textarea required='required' class="form-control" name="content" placeholder="Your Tweet" cols="40" rows="5"></textarea>
       <button type='submit' class='btn btn-secondary'>Tweet</button>
     </form>
   </div>
@@ -25,6 +26,16 @@ Amazing
 </div>
 
 <script>
+
+  function handleTweetFormError(msg,display){
+    var myErrorDiv = document.getElementById('tweet-  ')
+    if(display===true){
+      myErrorDiv.setAttribute("class","d-block alert alert-danger")
+      myErrorDiv.innerText = msg
+    }else{
+
+    }
+  }
 
   function handleTweetCreateFormDidSubmit(event){
     event.preventDefault()
@@ -49,13 +60,37 @@ Amazing
         // loadTweets(tweetsEl)
 
         if(xhr.status === 201){
+          handleTweetFormError("",false)
           const newTweetJson =  xhr.response
           //const newTweetJson = JSON.parse(newTweet)
           console.log(newTweetJson.likes)
           const newTweetElement = formatTweetElement(newTweetJson)
           console.log(newTweetElement) 
-          tweetsContainerElement.prepend(newTweetElement)
+          const ogHtml = tweetsContainerElement.innerHTML
+          tweetsContainerElement.innerHTML = newTweetElement + ogHtml
+          myForm.reset()
+          //tweetsContainerElement.prepend(newTweetElement) add element at the end
+        }  
+        else if (xhr.status === 400){
+          const errorJson = xhr.response
+          const contentError = errorJson.content
+          let contentErrorMsg;
+          if(contentError){
+            contentErrorMsg = contentError[0]
+            if(contentErrorMsg){
+              handleTweetFormError(contentErrorMsg,true)
+            }
+          }else{
+            alert("An Error Occured")
+          }
+          console.log(errorJson)
         }
+        else if (xhr.status === 500){
+          alert("Server Error!")
+        }
+    }
+    xhr.onerror = function(){
+      alert("ERROR!")
     }
     xhr.send(myFormData)
   }

@@ -8,7 +8,8 @@ from .forms import TweetForm
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
 def tweet_create_view(request,*args,**kwargs):
-    print("ajax",request.is_ajax())
+    
+    # print("ajax",request.is_ajax())
     form = TweetForm(request.POST or None)
     next_url = request.POST.get("next") or None
     print('next_url',next_url)
