@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from babbles.views import (
     home_view,
     tweet_detail_view,
@@ -30,6 +30,5 @@ urlpatterns = [
     path('babbles/<int:tweet_id>',tweet_detail_view),
     path('babbles/',tweet_list_view),
     path('create-tweet',tweet_create_view),
-    path('api/babbles/<int:tweet_id>/delete',tweet_delete_view),
-    path('api/babbles/action',tweet_action_view)
+    path('api/babbles/',include('babbles.urls'))
 ]
