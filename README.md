@@ -1,10 +1,10 @@
 # Babble -A social media app 
   
 ## TODO
-~~Tweets -> Creating -> Text -> Image -> Delete -> Retweeting
+~~Tweets -> Creating -> Text -> Image -> Delete -> Retweeting~~
 
-~~Users -> Register ->
-Login -> Logout -> ~~
+~~Users -> Register ->~~
+~~Login -> Logout -> ~~
 Profile -> Image? ->  
 ~~Text? -> Follow Button 
 -> Feed -> User's feed only? 
