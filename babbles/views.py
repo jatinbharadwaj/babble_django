@@ -39,7 +39,7 @@ def tweet_detail_view(request,tweet_id,*args,**kwargs):
     qs = Tweet.objects.filter(id=tweet_id)
     if not qs.exists():
         return Response({},status=404)
-    obj = qs.first
+    obj = qs.first()
     serializer = TweetSerializer(obj)
     return Response(serializer.data,status=200) 
 
@@ -48,10 +48,10 @@ def tweet_detail_view(request,tweet_id,*args,**kwargs):
 def tweet_delete_view(request,tweet_id,*args,**kwargs):
     qs = Tweet.objects.filter(id=tweet_id)
     if not qs.exists():
-        return Response({},status=404)
+        return Response({"message":"Not Found"},status=404)
     qs = qs.filter(user=request.user)
     if not qs.exists():
-        return Response({'message':'CANT DELETE'},status=401)
+        return Response({"message":"CANT DELETE"},status=403) 
     obj = qs.first()
     obj.delete()
     return Response({"message":"Removed Tweet"},status=200)
@@ -70,6 +70,7 @@ def tweet_action_view(request,*args,**kwargs):
         content = data.get("content")
         qs = Tweet.objects.filter(id=tweet_id)
         if not qs.exists():
+            #  print(Response)
             return Response({},status=404)
         obj = qs.first()
         if action == "like":
@@ -78,10 +79,12 @@ def tweet_action_view(request,*args,**kwargs):
             return Response(serializer.data, status=200)
         elif action == "unlike":
             obj.likes.remove(request.user)
-        elif action == "retweet":
-            new_tweet = Tweet.objects.create(user=request.user,parent=obj,content=content,)
             serializer = TweetSerializer(obj)
             return Response(serializer.data, status=200)
+        elif action == "retweet":
+            new_tweet = Tweet.objects.create(user=request.user,parent=obj,content=content)
+            serializer = TweetSerializer(new_tweet)
+            return Response(serializer.data, status=201)
     return Response({},status=200)    
 
 

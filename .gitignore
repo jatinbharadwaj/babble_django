@@ -1,0 +1,7 @@
+node_modules/
+
+parse.py
+
+__pycache__
+*.py[cod]
+*$py.class
