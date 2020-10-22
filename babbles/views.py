@@ -36,6 +36,9 @@ def tweet_create_view(request,*args,**kwargs):
 def tweet_list_view(request,*args,**kwargs):
     qs = Tweet.objects.all() #model object grabs all the data
     # tweets_list = [{"id":x.id,"content":x.content, "likes":12} for x in qs]  #iterate on the database
+    username = request.GET.get('username') # ?username=Jeeku
+    if username != None:
+        qs = qs.filter(user__username__iexact=username)
     serializer = TweetSerializer(qs, many=True)
     return Response(serializer.data,status=200)
 
