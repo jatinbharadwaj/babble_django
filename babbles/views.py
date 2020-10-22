@@ -16,12 +16,17 @@ from .serializers import (
 # Create your views here.
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
+def home_view(request, *args, **kwargs):
+    username = None
+    if request.user.is_authenticated:
+        username = request.user.username
+    return render(request, "pages/home.html", context={"username": username}, status=200)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated]) #REST_API
 # @authentication_classes([SessionAuthentication])
 def tweet_create_view(request,*args,**kwargs):
-    serializer = TweetSerializer(data=request.POST or None)
+    serializer = TweetSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
        serializer.save(user=request.user)
        return Response(serializer.data,status=201)
@@ -31,6 +36,9 @@ def tweet_create_view(request,*args,**kwargs):
 def tweet_list_view(request,*args,**kwargs):
     qs = Tweet.objects.all() #model object grabs all the data
     # tweets_list = [{"id":x.id,"content":x.content, "likes":12} for x in qs]  #iterate on the database
+    username = request.GET.get('username') # ?username=Jeeku
+    if username != None:
+        qs = qs.filter(user__username__iexact=username)
     serializer = TweetSerializer(qs, many=True)
     return Response(serializer.data,status=200)
 
@@ -51,7 +59,7 @@ def tweet_delete_view(request,tweet_id,*args,**kwargs):
         return Response({"message":"Not Found"},status=404)
     qs = qs.filter(user=request.user)
     if not qs.exists():
-        return Response({"message":"CANT DELETE"},status=403) 
+        return Response({"message":"CANT DELETE"},status=401) 
     obj = qs.first()
     obj.delete()
     return Response({"message":"Removed Tweet"},status=200)
@@ -109,11 +117,6 @@ def tweet_create_view_pure_django(request,*args,**kwargs):
             return redirect(next_url)
         form = TweetForm()
     return render(request,'Components/form.html',context={"form":form})
-
-def home_view(request,*args,**kwargs):
-    # print(args,kwargs)
-    # return HttpResponse("<h1>Hello World</h1>")
-    return render(request,"pages/home.html",context={},status=200)
 
 def tweet_list_view_pure_django(request,*args,**kwargs):
     """
