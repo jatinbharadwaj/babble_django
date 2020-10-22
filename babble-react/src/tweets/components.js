@@ -1,21 +1,26 @@
 import React, {useEffect, useState}  from 'react'
 
-import {loadTweets} from '../lookup'
+import {createTweet,loadTweets} from '../lookup'
 
 export function TweetsComponent(props) {
     const textAreaRef = React.createRef()
     const [newTweets, setNewTweets] = useState([])
+    const handleBackendUpdate = (response, status) =>{
+      // backend api response handler
+      let tempNewTweets = [...newTweets]
+      if (status === 201){
+        tempNewTweets.unshift(response)
+        setNewTweets(tempNewTweets)
+      } else {
+        console.log(response)
+        alert("An error occured please try again")
+      }
+    }
+
     const handleSubmit = (event) => {
       event.preventDefault()
       const newVal = textAreaRef.current.value
-      let tempNewTweets = [...newTweets]
-      // change this to a server side call
-      tempNewTweets.unshift({
-        content: newVal,
-        likes: 0,
-        id: 12313
-      })
-      setNewTweets(tempNewTweets)
+      createTweet(newVal, handleBackendUpdate)
       textAreaRef.current.value = ''
     }
     return <div className={props.className}>
@@ -49,7 +54,7 @@ export function TweetsList(props) {
             setTweetsInit(response)
             setTweetsDidSet(true)
           } else {
-            alert("There was an error")
+            alert("There was an error tweets/components")
           }
         }
         loadTweets(myCallback)
