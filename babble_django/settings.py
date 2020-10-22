@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #internal
-    'babbles',
+    'babbles', 
+    'accounts',
     #external
     'rest_framework',
     'corsheaders',
