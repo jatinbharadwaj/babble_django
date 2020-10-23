@@ -18,7 +18,7 @@ It is a microblogging social media app similar to twitter. Backend is developed 
 ### Profiles
 * **Bio** Write an introduction about yourself 
 * **Location** Mention Your Country or Hometown 
-* 
+
 
 ## API Documentation 
 
