@@ -25,7 +25,7 @@ SECRET_KEY = '8kisrj#jrsu$^@d-9h4g8%hv6v)x5g1ew$%yti8nt^q(iuw-tm'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','localhost:3000']
 LOGIN_URL = '/login'
 MAX_TWEET_LENGTH = 240
 TWEET_ACTION_OPTIONS = ["like","unlike","retweet"]
@@ -40,19 +40,23 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #internal
-    'babbles',
+    'babbles', 
+    'accounts',
+    'profiles',
     #external
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',  
 ]
 
 ROOT_URLCONF = 'babble_django.urls'
@@ -124,21 +128,33 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-DEFAULT_RENDERER_CLASSES=[
-        'rest_framework.renderers.JSONRenderer',
-        # 'rest_framework.renderers.BrowsableAPIRenderer',        
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR,"static-root")
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/api/.*$'
+
+DEFAULT_RENDERER_CLASSES=[
+        'rest_framework.renderers.JSONRenderer',       
+]
+
+DEFAULT_AUTHENTICATION_CLASSES = ['rest_framework.authentication.SessionAuthentication']
+
 
 if DEBUG:
     DEFAULT_RENDERER_CLASSES += [
         'rest_framework.renderers.BrowsableAPIRenderer',       
     ]
+    DEFAULT_AUTHENTICATION_CLASSES += [
+        'babble_django.rest_api.dev.DevAuthentication'
+    ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':[
-    'rest_framework.authentication.SessionAuthentication',
-    # 'rest_framework.authentication.BasicAuthentication'
-    ],
+    'DEFAULT_AUTHENTICATION_CLASSES':DEFAULT_AUTHENTICATION_CLASSES,
     'DEFAULT_RENDERER_CLASSES':DEFAULT_RENDERER_CLASSES      
-    
 }
