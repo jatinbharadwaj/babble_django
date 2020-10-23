@@ -25,7 +25,7 @@ SECRET_KEY = '8kisrj#jrsu$^@d-9h4g8%hv6v)x5g1ew$%yti8nt^q(iuw-tm'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost','localhost:3000']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','localhost:3000','https://babble-social-media.herokuapp.com/']
 LOGIN_URL = '/login'
 MAX_TWEET_LENGTH = 240
 TWEET_ACTION_OPTIONS = ["like","unlike","retweet"]
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -128,12 +129,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+PROJECT_ROOT   =   os.path.join(os.path.abspath(__file__))
+STATIC_ROOT  =   os.path.join(PROJECT_ROOT, 'staticfiles')
+STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
-
-STATIC_ROOT = os.path.join(BASE_DIR,"static-root")
+# Extra lookup directories for collectstatic to find static files
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+)
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -150,11 +154,15 @@ if DEBUG:
     DEFAULT_RENDERER_CLASSES += [
         'rest_framework.renderers.BrowsableAPIRenderer',       
     ]
-    DEFAULT_AUTHENTICATION_CLASSES += [
-        'babble_django.rest_api.dev.DevAuthentication'
-    ]
+    # DEFAULT_AUTHENTICATION_CLASSES += [
+    #     'babble_django.rest_api.dev.DevAuthentication'
+    # ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':DEFAULT_AUTHENTICATION_CLASSES,
     'DEFAULT_RENDERER_CLASSES':DEFAULT_RENDERER_CLASSES      
 }
+
+import dj_database_url 
+prod_db  =  dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(prod_db)
