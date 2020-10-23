@@ -86,3 +86,5 @@ Check praticular profile
               ├── static
               ├── static-root
               └── templates
+
+Special thanks to [Justin](https://www.codingforentrepreneurs.com/) for his amazing and detailed tutorials 
