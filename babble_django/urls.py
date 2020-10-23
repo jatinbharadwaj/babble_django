@@ -27,13 +27,14 @@ from accounts.views import (
 
 
 from babbles.views import (
+    home_view,
     tweets_list_view,
     tweets_detail_view,
 )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('',home_view),
+    path('',home_view),
     # path('react/',TemplateView.as_view(template_name='react_via_dj.html')),
     # path('babbles/<int:tweet_id>',tweet_detail_view),
     # path('babbles/',tweet_list_view),
@@ -42,7 +43,7 @@ urlpatterns = [
     path('logout/', logout_view),
     path('register/', register_view),
 
-    path('', tweets_list_view),
+    path('global/', tweets_list_view),
     path('<int:tweet_id>', tweets_detail_view),
     re_path(r'profiles?/', include('profiles.urls')),
     path('api/babbles/',include('babbles.api.urls')),
