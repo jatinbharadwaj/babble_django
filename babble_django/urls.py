@@ -29,7 +29,6 @@ from accounts.views import (
 from babbles.views import (
     tweets_list_view,
     tweets_detail_view,
-    tweets_profile_view,
 )
 
 urlpatterns = [
@@ -45,8 +44,9 @@ urlpatterns = [
 
     path('', tweets_list_view),
     path('<int:tweet_id>', tweets_detail_view),
-    path('profile/<str:username>', tweets_profile_view),
-    path('api/babbles/',include('babbles.api.urls'))
+    re_path(r'profiles?/', include('profiles.urls')),
+    path('api/babbles/',include('babbles.api.urls')),
+    re_path(r'api/profiles?/', include('profiles.api.urls')),
 ]
 
 if settings.DEBUG:
