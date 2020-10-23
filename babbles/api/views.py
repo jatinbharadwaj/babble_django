@@ -34,7 +34,7 @@ def tweet_list_view(request,*args,**kwargs):
     # tweets_list = [{"id":x.id,"content":x.content, "likes":12} for x in qs]  #iterate on the database
     username = request.GET.get('username') # ?username=Jeeku
     if username != None:
-        qs = qs.filter(user__username__iexact=username)
+        qs = qs.by_username(username)
     serializer = TweetSerializer(qs, many=True)
     return Response(serializer.data,status=200)
 
@@ -91,6 +91,13 @@ def tweet_action_view(request,*args,**kwargs):
             return Response(serializer.data, status=201)
     return Response({},status=200)    
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def tweet_feed_view(request, *args, **kwargs):
+    user = request.user
+    qs = Tweet.objects.feed(user)
+    serializer = TweetSerializer(qs, many=True)
+    return Response( serializer.data, status=200)
 
 def tweet_create_view_pure_django(request,*args,**kwargs):
     user = request.user
