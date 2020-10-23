@@ -1,7 +1,9 @@
 from django.http import Http404
 from django.shortcuts import render, redirect
+
 from .forms import ProfileForm
 from .models import Profile
+
 
 
 def profile_update_view(request, *args, **kwargs):
@@ -44,4 +46,4 @@ def profile_detail_view(request, username, *args, **kwargs):
         "username": username,
         "profile": profile_obj
     }
-    return render(request, "profiles/detail.html", context) 
+    return render(request, "profiles/detail.html", context)

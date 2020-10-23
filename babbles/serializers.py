@@ -51,8 +51,8 @@ class TweetSerializer(serializers.ModelSerializer):
         'timestamp']
     def get_likes(self,obj):
         return obj.likes.count()
-    def get_content(self,obj):
-        content = obj.content
-        if obj.is_retweet:
-            content = obj.parent.content
-        return content
+    # def get_content(self,obj):
+    #     content = obj.content
+    #     if obj.is_retweet:
+    #         content = obj.parent.content
+    #     return content

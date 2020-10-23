@@ -35,7 +35,7 @@ class TweetManager(models.Manager):
 
 class Tweet(models.Model):
     # id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tweets')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tweets")
     parent =  models.ForeignKey("self",null="True", on_delete= models.SET_NULL)
     content = models.TextField(blank=True, null=True)
     image = models.FileField(upload_to='images/',blank=True,null=True)
@@ -54,9 +54,9 @@ class Tweet(models.Model):
         return self.parent != None 
 
 
-    # def serialize(self):
-    #     return{
-    #         "id": self.id,
-    #         "content": self.content,
-    #         "likes": random.randint(0,200)
-    #     }
+    def serialize(self):
+        return{
+            "id": self.id,
+            "content": self.content,
+            "likes": random.randint(0,200)
+        }

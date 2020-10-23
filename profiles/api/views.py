@@ -23,6 +23,7 @@ ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 #     to_follow_user = ??
 #     return Response({}, status=200)
 
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def user_follow_view(request, username, *args, **kwargs):
