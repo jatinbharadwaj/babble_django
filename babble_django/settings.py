@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '8kisrj#jrsu$^@d-9h4g8%hv6v)x5g1ew$%yti8nt^q(iuw-tm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost','localhost:3000','https://babble-social-media.herokuapp.com/']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','localhost:3000','https://babble-social-media.herokuapp.com/','0.0.0.0']
 LOGIN_URL = '/login'
 MAX_TWEET_LENGTH = 240
 TWEET_ACTION_OPTIONS = ["like","unlike","retweet"]
@@ -81,6 +81,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'babble_django.wsgi.application'
 
 
+
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -128,22 +129,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
-PROJECT_ROOT   =   os.path.join(os.path.abspath(__file__))
-STATIC_ROOT  =   os.path.join(PROJECT_ROOT, 'staticfiles')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+WHITENOISE_USE_FINDERS = True
+
+STATIC_ROOT = os.path.join(BASE_DIR,"static-root")
 STATIC_URL = '/static/'
 
-# Extra lookup directories for collectstatic to find static files
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_ROOT, 'static'),
-)
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/api/.*$'
 
 DEFAULT_RENDERER_CLASSES=[
+
         'rest_framework.renderers.JSONRenderer',       
 ]
 
@@ -154,9 +159,9 @@ if DEBUG:
     DEFAULT_RENDERER_CLASSES += [
         'rest_framework.renderers.BrowsableAPIRenderer',       
     ]
-    # DEFAULT_AUTHENTICATION_CLASSES += [
-    #     'babble_django.rest_api.dev.DevAuthentication'
-    # ]
+    DEFAULT_AUTHENTICATION_CLASSES += [
+        'babble_django.rest_api.dev.DevAuthentication'
+    ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':DEFAULT_AUTHENTICATION_CLASSES,
@@ -164,5 +169,7 @@ REST_FRAMEWORK = {
 }
 
 import dj_database_url 
+import django_heroku
 prod_db  =  dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(prod_db)
+django_heroku.settings(locals())

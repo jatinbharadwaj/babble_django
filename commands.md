@@ -3,4 +3,5 @@
  python manage.py migrate           //databases created
  ./migrate.py runserver            //runserver
  python manage.py createsuperuser
+ python test
  jeeku jeeku123
