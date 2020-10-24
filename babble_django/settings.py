@@ -25,7 +25,7 @@ SECRET_KEY = '8kisrj#jrsu$^@d-9h4g8%hv6v)x5g1ew$%yti8nt^q(iuw-tm'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost','localhost:3000','https://babble-social-media.herokuapp.com/','0.0.0.0']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','localhost:3000','0.0.0.0']
 LOGIN_URL = '/login'
 MAX_TWEET_LENGTH = 240
 TWEET_ACTION_OPTIONS = ["like","unlike","retweet"]
