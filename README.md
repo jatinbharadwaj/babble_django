@@ -2,6 +2,11 @@
 
 It is a microblogging social media app similar to twitter. Backend is developed using **_Django and REST Framework_** and frontend is developed using **_ReactJS and BootStrap_**
 
+## Demo
+![](ezgif.com-gif-maker.gif)
+
+### Heroku link: [Click here](https://babble-social-media.herokuapp.com/)
+
 ## Business Logic
 ### Users
 * **Register:** Create new User 
@@ -87,4 +92,13 @@ Check praticular profile
               ├── static-root
               └── templates
 
+## Login
+![](Login.png)
+## Register
+![](Register.png)
+## Feed
+![](Feed.png)
+
 Special thanks to [Justin](https://www.codingforentrepreneurs.com/) for his amazing and detailed tutorials 
+
+
